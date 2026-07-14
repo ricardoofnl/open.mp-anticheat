@@ -8,7 +8,7 @@
 			"archive": true,
 			"includes": ["includes"],
 			"files": {
-				"components/anticheat.so": "components",
+				"components/anticheat.so": "components/",
 				"components/anticheat.cfg": "components"
 			}
 		},
@@ -18,7 +18,7 @@
 			"archive": true,
 			"includes": ["includes"],
 			"files": {
-				"components/anticheat.dll": "components",
+				"components/anticheat.dll": "components/",
 				"components/anticheat.cfg": "components"
 			}
 		}
