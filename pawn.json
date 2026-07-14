@@ -9,7 +9,7 @@
 			"includes": ["includes"],
 			"files": {
 				"components/anticheat.so": "components/",
-				"components/anticheat.cfg": "components"
+				"components/anticheat.cfg": "components/"
 			}
 		},
 		{
@@ -19,7 +19,7 @@
 			"includes": ["includes"],
 			"files": {
 				"components/anticheat.dll": "components/",
-				"components/anticheat.cfg": "components"
+				"components/anticheat.cfg": "components/"
 			}
 		}
 	]
