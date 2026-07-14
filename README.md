@@ -20,9 +20,27 @@ cmake --build build
 
 output is `anticheat.so` (linux) or `anticheat.dll` (windows). on fedora the 32-bit libs are `glibc-devel.i686 libstdc++-devel.i686 libgcc.i686`. on cmake 4.x add `-DCMAKE_POLICY_VERSION_MINIMUM=3.5`. to build without the pawn api pass `-DAC_ENABLE_PAWN=OFF`.
 
-## installing
+## install with sampctl
 
-copy `anticheat.so` / `anticheat.dll` into your server's `components/` folder, and copy `anticheat.cfg` to `components/anticheat.cfg` (every key is optional). for the pawn api, put `pawn/anticheat.inc` on your compiler include path and `#include <anticheat>`.
+with [sampctl](https://github.com/Southclaws/sampctl), add it to your server's `pawn.json`:
+
+```json
+"dependencies": [
+  "ricardoofnl/open.mp-anticheat"
+]
+```
+
+or run:
+
+```
+sampctl install ricardoofnl/open.mp-anticheat
+```
+
+sampctl fetches the latest release and extracts `anticheat.so` / `anticheat.dll` and `anticheat.cfg` into `components/`, and `anticheat.inc` onto the compiler include path. `sampctl ensure` / `sampctl run` then picks it up.
+
+## install manually
+
+copy `anticheat.so` (linux) or `anticheat.dll` (windows) plus `anticheat.cfg` into your server's `components/` folder, and put `pawn/anticheat.inc` on your compiler include path. then `#include <anticheat>` in your gamemode.
 
 ## config
 

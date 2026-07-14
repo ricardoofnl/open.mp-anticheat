@@ -7,14 +7,20 @@
 			"platform": "linux",
 			"archive": true,
 			"includes": ["includes"],
-			"plugins": ["components/anticheat.so"]
+			"files": {
+				"components/anticheat.so": "components",
+				"components/anticheat.cfg": "components"
+			}
 		},
 		{
 			"name": "^anticheat-.*-windows\\.zip$",
 			"platform": "windows",
 			"archive": true,
 			"includes": ["includes"],
-			"plugins": ["components/anticheat.dll"]
+			"files": {
+				"components/anticheat.dll": "components",
+				"components/anticheat.cfg": "components"
+			}
 		}
 	]
 }
