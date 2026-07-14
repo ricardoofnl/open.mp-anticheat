@@ -16,8 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
+
+      - name: fetch deps (sdk, network, pawn)
+        run: ./bootstrap.sh
 
       - name: install 32-bit toolchain
         run: |
@@ -46,8 +47,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
+
+      - name: fetch deps (sdk, network, pawn)
+        shell: bash
+        run: ./bootstrap.sh
 
       - name: build (windows x86)
         run: |
