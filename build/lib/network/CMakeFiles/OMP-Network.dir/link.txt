@@ -1,2 +1,0 @@
-/usr/bin/ar qc libOMP-Network.a "CMakeFiles/OMP-Network.dir/Encoding/huffman_tree.cpp.o" "CMakeFiles/OMP-Network.dir/Encoding/str_compress.cpp.o" "CMakeFiles/OMP-Network.dir/bitstream.cpp.o"
-/usr/bin/ranlib libOMP-Network.a

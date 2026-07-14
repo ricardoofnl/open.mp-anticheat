@@ -53,6 +53,7 @@ jobs:
         run: ./bootstrap.sh
 
       - name: build (windows x86)
+        shell: bash
         run: |
           cmake -S . -B build -A Win32 -DAC_ENABLE_PAWN=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
           cmake --build build --config Release
