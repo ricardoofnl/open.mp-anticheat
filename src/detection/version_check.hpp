@@ -1,12 +1,6 @@
 #pragma once
 
-/*
- *  Module 2: client-version + samp.dll checks (action 0x45). Sends the
- *  per-version samp.dll probes, repeatedly reads the client addresses to catch
- *  a value that changes between reads (RakNet/S0beit anomaly), and does the
- *  extra connect/spawn wave checks for non-omp clients. The version whitelist
- *  itself is enforced by the component at evaluate time.
- */
+// module 2: client-version + samp.dll checks (0x45) - per-version probes, repeated-read anomaly, and connect/spawn extra checks for non-omp clients.
 
 #include "module.hpp"
 

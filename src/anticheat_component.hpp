@@ -1,11 +1,6 @@
 #pragma once
 
-/*
- *  The anti-cheat component. Owns the config, scheduler, enforcement and the
- *  list of detection modules; receives player/network/tick events from the
- *  server and fans them out to the modules; and is the single place that turns
- *  a module's detection into an action (report()).
- */
+// the anti-cheat component: owns config/scheduler/enforcement/modules, receives player/network/tick events, and turns detections into actions via report().
 
 #include <memory>
 #include <random>
@@ -42,7 +37,7 @@ public:
 
 	static AntiCheatComponent* getInstance();
 
-	// ---- IComponent ----
+	// icomponent
 	StringView componentName() const override { return "Anti-Cheat"; }
 	SemanticVersion componentVersion() const override { return SemanticVersion(1, 0, 0, 0); }
 	void onLoad(ICore* c) override;
@@ -52,16 +47,16 @@ public:
 	void free() override;
 	void reset() override;
 
-	// ---- player events ----
+	// player events
 	void onPlayerConnect(IPlayer& player) override;
 	void onPlayerDisconnect(IPlayer& player, PeerDisconnectReason reason) override;
 	void onPlayerSpawn(IPlayer& player) override;
 	void onClientCheckResponse(IPlayer& player, int actionType, int address, int results) override;
 
-	// ---- core tick ----
+	// core tick
 	void onTick(Microseconds elapsed, TimePoint now) override;
 
-	// ---- IACContext ----
+	// iaccontext
 	ICore* core() override { return core_; }
 	const Config& config() const override { return config_; }
 	Scheduler& scheduler() override { return scheduler_; }
@@ -69,12 +64,12 @@ public:
 	void report(IPlayer& player, PlayerACData& data, CheatId cheat) override;
 
 #ifdef AC_ENABLE_PAWN
-	// ---- pawn script (dis)loads ----
+	// pawn script (dis)loads
 	void onAmxLoad(IPawnScript& script) override;
 	void onAmxUnload(IPawnScript& script) override;
 #endif
 
-	// ---- helpers used by the Pawn natives ----
+	// helpers used by the pawn natives
 	bool addException(int playerid, int cheatid);
 	bool removeException(int playerid, int cheatid);
 	bool isMobile(int playerid);
@@ -98,8 +93,8 @@ private:
 	std::unique_ptr<Enforcement> enforcement_;
 
 	std::vector<std::unique_ptr<IDetectionModule>> modules_;
-	// Non-owning views of the two raw-RakNet modules (also held in modules_);
-	// needed to register their per-RPC handlers.
+	// non-owning views of the two raw-raknet modules (also held in modules_);
+	// needed to register their per-rpc handlers.
 	MobileCheck* mobileModule_ = nullptr;
 	RaknetCheck* raknetModule_ = nullptr;
 
@@ -112,8 +107,7 @@ private:
 
 #ifdef AC_ENABLE_PAWN
 	IPawnComponent* pawn_ = nullptr;
-	// Fire OnPlayerCheatDetected in every script. Returns 0 if a script asked us
-	// to suppress the built-in action (by returning 0), 1 otherwise.
+	// fire onplayercheatdetected in every script; returns 0 if a script asked to suppress the built-in action, 1 otherwise.
 	int firePawnDetected(int playerid, int cheatid, int action);
 #endif
 

@@ -1,8 +1,4 @@
-/*
- *  ac_test.pwn - minimal gamemode/filterscript to exercise the anti-cheat's
- *  Pawn API. Compile with the open.mp compiler and run it alongside the
- *  anticheat component.
- */
+// ac_test.pwn - minimal gamemode to exercise the anti-cheat pawn api (compile with the open.mp compiler).
 
 #include <open.mp>
 #include <anticheat>
@@ -17,7 +13,7 @@ public OnPlayerCheatDetected(playerid, cheatid, action)
 
 	printf("[AC-TEST] %s (id %d) -> cheat %d '%s', action %d", pname, playerid, cheatid, name, action);
 
-	// Example policy: let RCON admins bypass everything.
+	// example policy: let rcon admins bypass everything.
 	if (IsPlayerAdmin(playerid))
 	{
 		printf("[AC-TEST] %s is admin - suppressing action", pname);
@@ -28,7 +24,7 @@ public OnPlayerCheatDetected(playerid, cheatid, action)
 
 public OnPlayerConnect(playerid)
 {
-	// Example: this server tolerates SilentPatch, so never report it here.
+	// example: this server tolerates silentpatch, so never report it here.
 	AC_AddException(playerid, AC_CHEAT_SILENTPATCH);
 
 	if (AC_IsPlayerMobile(playerid))

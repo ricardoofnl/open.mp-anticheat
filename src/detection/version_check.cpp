@@ -11,7 +11,7 @@ bool VersionCheck::enabled(const Config& cfg) const
 
 void VersionCheck::onConnect(IPlayer& player, PlayerACData& data)
 {
-	// Read the four client addresses; they must stay constant across reads.
+	// read the four client addresses; they must stay constant across reads.
 	for (int i = 0; i < 4; ++i)
 	{
 		data.clientAddrSent[i] = signatures::kClientAddr[i];
@@ -27,9 +27,7 @@ void VersionCheck::onConnect(IPlayer& player, PlayerACData& data)
 	for (int k = 0; k < 3; ++k)
 		player.sendClientCheck(0x45, data.sampCheckAddr, 0x0, 0x4);
 
-	// Extra connect-wave samp.dll check - only for non-omp clients, matching the
-	// reference's !IsPlayerUsingOmp guard (the omp client lays memory out
-	// differently, so this would false-positive).
+	// extra connect-wave samp.dll check - non-omp clients only (reference !isplayerusingomp guard; the omp client would false-positive).
 	if (!player.isUsingOmp())
 	{
 		const int off = ctx_.nextMemOffset();
@@ -57,15 +55,15 @@ void VersionCheck::onCheckResponse(IPlayer& player, PlayerACData& data, int acti
 	if (actionType != 0x45)
 		return;
 
-	// Connect-wave extra check: a clean client answers 128.
+	// connect-wave extra check: a clean client answers 128.
 	if (data.addCheckConnectAddr != 0 && address == data.addCheckConnectAddr && (results & 0xFF) != 128)
 		data.pending[Cheat_CLEO_7] = true;
 
-	// Spawn-wave extra check: a clean client answers 192.
+	// spawn-wave extra check: a clean client answers 192.
 	if (data.addCheckSpawnAddr != 0 && address == data.addCheckSpawnAddr && (results & 0xFF) != 192)
 		data.pending[Cheat_ModdedClient] = true;
 
-	// Repeated client-address reads must return the same value every time.
+	// repeated client-address reads must return the same value every time.
 	for (int i = 0; i < 4; ++i)
 	{
 		if (address == data.clientAddrSent[i])

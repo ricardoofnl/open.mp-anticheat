@@ -8,7 +8,7 @@
 
 namespace
 {
-// Colours from the reference filterscript.
+// colours from the reference filterscript.
 const Colour kColError = Colour::FromRGBA(0xA01616FF);
 const Colour kColOk = Colour::FromRGBA(0x20DD6AFF);
 }
@@ -50,7 +50,7 @@ void Enforcement::ban(IPlayer& player, const char* cheatName)
 void Enforcement::scheduleKick(IPlayer& player)
 {
 	const int id = player.getID();
-	// Look the player back up by id when the timer fires - the IPlayer& may be gone by then.
+	// look the player back up by id when the timer fires - the iplayer& may be gone by then.
 	sched_.after(id, std::chrono::milliseconds(cfg_.kickDelayMs()), [this, id]()
 		{
 			if (IPlayer* p = core_->getPlayers().get(id))

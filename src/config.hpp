@@ -1,6 +1,6 @@
 #pragma once
 
-// Config loaded from a key=value file (components/anticheat.cfg); every key is optional.
+// config loaded from a key=value file (components/anticheat.cfg); every key is optional.
 
 #include <cstdint>
 #include <string>
@@ -14,7 +14,7 @@
 class Config
 {
 public:
-	// Parse `path` if it exists; otherwise keep defaults. `logger` may be null.
+	// parse `path` if it exists; otherwise keep defaults. `logger` may be null.
 	void load(const std::string& path, ILogger* logger);
 
 	bool enabled() const { return enabled_; }
@@ -29,10 +29,10 @@ public:
 	bool moduleMemory() const { return modMemory_; }
 	bool moduleVersion() const { return modVersion_; }
 	bool modulePoison() const { return modPoison_; }
-	bool moduleMobile() const { return modMobile_; } // raw RakNet, off by default
-	bool moduleRaknet() const { return modRaknet_; } // raw RakNet, off by default
+	bool moduleMobile() const { return modMobile_; } // raw raknet, off by default
+	bool moduleRaknet() const { return modRaknet_; } // raw raknet, off by default
 
-	// Resolve the configured action for a cheat (per-cheat override, else the
+	// resolve the configured action for a cheat (per-cheat override, else the
 	// signature's built-in default).
 	CheatAction actionFor(CheatId id) const;
 

@@ -1,17 +1,11 @@
-/*
- *  anticheat.inc - Pawn API for the open.mp Anti-Cheat component.
- *
- *  Put this on your compiler's include path and `#include <anticheat>` in your
- *  gamemode/filterscript. Requires the anticheat component built with
- *  AC_ENABLE_PAWN (the default).
- */
+// anticheat.inc - pawn api for the open.mp anti-cheat component (#include <anticheat>; needs the component built with ac_enable_pawn).
 
 #if defined _INC_anticheat
 	#endinput
 #endif
 #define _INC_anticheat
 
-// ---- cheat ids (mirror the component's CheatId enum) ----
+// cheat ids (mirror the component's cheatid enum)
 #define AC_CHEAT_NONE                (0)
 #define AC_CHEAT_S0BEIT              (1)
 #define AC_CHEAT_CLEO_2              (2)
@@ -34,13 +28,13 @@
 #define AC_CHEAT_FAKEMOBILE          (19)
 #define AC_CHEAT_MODDED_CLIENT       (20)
 
-// ---- actions (as configured per cheat) ----
+// actions (as configured per cheat)
 #define AC_ACTION_IGNORE             (0)
 #define AC_ACTION_WARN               (1)
 #define AC_ACTION_KICK               (2)
 #define AC_ACTION_BAN                (3)
 
-// ---- natives ----
+// natives
 native AC_SetEnabled(bool:toggle);
 native bool:AC_IsEnabled();
 native bool:AC_AddException(playerid, cheatid);
@@ -49,9 +43,5 @@ native bool:AC_IsPlayerMobile(playerid);
 native AC_GetLastCheat(playerid);
 native bool:AC_GetCheatName(cheatid, name[], len = sizeof(name));
 
-/*
- *  Called when a cheat is detected, BEFORE the built-in action runs.
- *  Return 0 to suppress the built-in action (you handle it yourself);
- *  return 1 (default) to let the component apply the configured action.
- */
+// called before the built-in action; return 0 to suppress it, 1 (default) to apply the configured action.
 forward OnPlayerCheatDetected(playerid, cheatid, action);

@@ -27,7 +27,7 @@ AntiCheatComponent* AntiCheatComponent::getInstance()
 	return instance_;
 }
 
-// ---------------------------------------------------------------- lifecycle
+// lifecycle
 
 void AntiCheatComponent::onLoad(ICore* c)
 {
@@ -35,8 +35,7 @@ void AntiCheatComponent::onLoad(ICore* c)
 
 	config_.load("components/anticheat.cfg", core_);
 
-	// Per-session random offset range for the memory checks (reference gOffSet):
-	// pick two bytes at least 32 apart, aligned to 4.
+	// per-session random offset range for the memory checks (reference goffset): two bytes >= 32 apart, aligned to 4.
 	{
 		std::uniform_int_distribution<int> d(0, 255);
 		int a, b;
@@ -60,7 +59,7 @@ void AntiCheatComponent::onLoad(ICore* c)
 	players.getPlayerConnectDispatcher().addEventHandler(this);
 	players.getPlayerSpawnDispatcher().addEventHandler(this);
 	players.getPlayerCheckDispatcher().addEventHandler(this);
-	core_->getEventDispatcher().addEventHandler(this); // onTick
+	core_->getEventDispatcher().addEventHandler(this); // ontick
 
 	log("Anti-Cheat v1.0.0 loaded. modules: memory=%d version=%d poison=%d mobile=%d raknet=%d | log_only=%d",
 		config_.moduleMemory(), config_.moduleVersion(), config_.modulePoison(),
@@ -71,8 +70,7 @@ void AntiCheatComponent::buildModules()
 {
 	modules_.clear();
 
-	// Mobile first: it sets the mobile-whitelist flag during onConnect, so the
-	// other modules see it and skip their checks for verified mobile clients.
+	// mobile first: it sets the mobile-whitelist flag during onconnect so the other modules skip verified mobile clients.
 	MobileCheck* mobile = new MobileCheck(*this);
 	mobileModule_ = mobile;
 	modules_.push_back(std::unique_ptr<IDetectionModule>(mobile));
@@ -104,9 +102,7 @@ void AntiCheatComponent::onReady()
 {
 	if (rpcRegistered_)
 		return;
-	// Register the raw-RakNet handlers only if their modules are enabled. These
-	// hook incoming RPC 25 (join, for the mobile checksum) and RPC 103 (the
-	// client-check response, for the serialization anomaly) on every network.
+	// register the raw-raknet handlers only if enabled: rpc 25 (join checksum) and rpc 103 (check-response anomaly) on every network.
 	if (config_.moduleMobile() && mobileModule_)
 		core_->addPerRPCInEventHandler<25>(mobileModule_);
 	if (config_.moduleRaknet() && raknetModule_)
@@ -158,7 +154,7 @@ AntiCheatComponent::~AntiCheatComponent()
 #endif
 }
 
-// ------------------------------------------------------------- player events
+// player events
 
 void AntiCheatComponent::onPlayerConnect(IPlayer& player)
 {
@@ -188,8 +184,7 @@ void AntiCheatComponent::onPlayerConnect(IPlayer& player)
 			m->onConnect(player, *data);
 	}
 
-	// Schedule the "evaluate everything collected" pass, like the reference's
-	// checkPlayer timer.
+	// schedule the "evaluate everything collected" pass, like the reference's checkplayer timer.
 	const int id = player.getID();
 	scheduler_.after(id, milliseconds(config_.evaluateDelayMs()), [this, id]()
 		{
@@ -209,7 +204,7 @@ void AntiCheatComponent::onPlayerDisconnect(IPlayer& player, PeerDisconnectReaso
 {
 	(void)reason;
 	scheduler_.cancelOwner(player.getID());
-	// The extension is auto-freed by the player pool (addExtension autoDelete).
+	// the extension is auto-freed by the player pool (addextension autodelete).
 }
 
 void AntiCheatComponent::onPlayerSpawn(IPlayer& player)
@@ -261,7 +256,7 @@ void AntiCheatComponent::onTick(Microseconds elapsed, TimePoint now)
 	scheduler_.process();
 }
 
-// --------------------------------------------------------------- evaluation
+// evaluation
 
 void AntiCheatComponent::evaluatePlayer(IPlayer& player, PlayerACData& data)
 {
@@ -278,7 +273,7 @@ void AntiCheatComponent::evaluatePlayer(IPlayer& player, PlayerACData& data)
 			m->onEvaluate(player, data);
 	}
 
-	// Everything the modules flagged gets reported once, here.
+	// everything the modules flagged gets reported once, here.
 	for (int c = Cheat_None + 1; c < Cheat_Max; ++c)
 	{
 		if (data.pending[c])
@@ -311,7 +306,7 @@ void AntiCheatComponent::rejectVersion(IPlayer& player, StringView version)
 		});
 }
 
-// ------------------------------------------------------------- report policy
+// report policy
 
 void AntiCheatComponent::report(IPlayer& player, PlayerACData& data, CheatId cheat)
 {
@@ -328,7 +323,7 @@ void AntiCheatComponent::report(IPlayer& player, PlayerACData& data, CheatId che
 	const int pid = player.getID();
 
 #ifdef AC_ENABLE_PAWN
-	// Let the gamemode see it first and optionally suppress the built-in action.
+	// let the gamemode see it first and optionally suppress the built-in action.
 	if (firePawnDetected(pid, static_cast<int>(cheat), static_cast<int>(action)) == 0)
 	{
 		log("detected %s on %.*s (id %d) - handled by script", info.name, PRINT_VIEW(name), pid);
@@ -357,7 +352,7 @@ void AntiCheatComponent::report(IPlayer& player, PlayerACData& data, CheatId che
 	}
 }
 
-// ------------------------------------------------------------------ helpers
+// helpers
 
 int AntiCheatComponent::nextMemOffset()
 {
@@ -389,7 +384,7 @@ void AntiCheatComponent::log(const char* fmt, ...)
 	core_->printLn("[AC] %s", buf);
 }
 
-// ------------------------------------------------------------ native helpers
+// native helpers
 
 bool AntiCheatComponent::addException(int playerid, int cheatid)
 {

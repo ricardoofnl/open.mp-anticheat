@@ -1,11 +1,6 @@
 #pragma once
 
-/*
- *  Thin bridge between the component and the Pawn scripting layer. All of the
- *  actual pawn-natives machinery (which pulls in pawn_impl.hpp exactly once)
- *  lives in natives.cpp, so the rest of the component never includes it.
- *  Compiled only when AC_ENABLE_PAWN is defined.
- */
+// thin bridge to the pawn layer; the pawn-natives machinery lives in natives.cpp. compiled only when ac_enable_pawn is defined.
 
 #ifdef AC_ENABLE_PAWN
 
@@ -14,15 +9,14 @@
 
 namespace ac_pawn
 {
-// Set up the amx function pointers + parameter lookups (call from onInit).
+// set up the amx function pointers + parameter lookups (call from oninit).
 void onInit(IComponentList* components, IPawnComponent* pawn);
 
-// Register this component's natives with a newly loaded script.
+// register this component's natives with a newly loaded script.
 void onAmxLoad(IPawnScript& script);
 
-// Fire public OnPlayerCheatDetected(playerid, cheatid, action) in every script.
-// Returns 0 if any script returned 0 (suppress the built-in action), else 1.
+// fire onplayercheatdetected(playerid, cheatid, action) in every script; returns 0 if any script returned 0 (suppress), else 1.
 int fireDetected(IPawnComponent* pawn, int playerid, int cheatid, int action);
 }
 
-#endif // AC_ENABLE_PAWN
+#endif // ac_enable_pawn

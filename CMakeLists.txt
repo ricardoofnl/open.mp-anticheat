@@ -4,17 +4,17 @@ project(omp-anticheat LANGUAGES C CXX VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# The Pawn API (natives + OnPlayerCheatDetected) needs the pawn + pawn-natives
-# submodules. Turn it off to build a lean, self-contained detection core that
+# the pawn api (natives + onplayercheatdetected) needs the pawn + pawn-natives
+# submodules. turn it off to build a lean, self-contained detection core that
 # still kicks/bans via config but exposes nothing to gamemodes.
 option(AC_ENABLE_PAWN "Build the Pawn natives + callback module" ON)
-# Real builds MUST be 32-bit (see below). Turn this OFF only for a host
+# real builds must be 32-bit (see below). turn this off only for a host
 # syntax/type check of the code on a 64-bit machine - the result won't load.
 option(AC_BUILD_32BIT "Build a 32-bit binary (required to actually load in open.mp)" ON)
 
-# open.mp SA-MP clients (and therefore the open.mp server and every component it
-# loads) are 32-bit. A 64-bit build will NOT load. On GCC/Clang we force -m32;
-# on MSVC pass -A Win32 to the generator instead.
+# open.mp sa-mp clients (and therefore the open.mp server and every component it
+# loads) are 32-bit. a 64-bit build will not load. on gcc/clang we force -m32;
+# on msvc pass -a win32 to the generator instead.
 if(AC_BUILD_32BIT AND NOT MSVC)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
@@ -22,8 +22,8 @@ if(AC_BUILD_32BIT AND NOT MSVC)
 	set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -m32")
 endif()
 
-# open.mp SDK (interface lib) + network lib (NetworkBitStream, only forward
-# declared by the SDK) live in git submodules under lib/.
+# open.mp sdk (interface lib) + network lib (networkbitstream, only forward
+# declared by the sdk) live in git submodules under lib/.
 add_subdirectory(lib/sdk)
 add_subdirectory(lib/network)
 
@@ -57,7 +57,7 @@ if(AC_ENABLE_PAWN)
 		PAWN_CELL_SIZE=32
 	)
 	target_include_directories(${PROJECT_NAME} PRIVATE
-		lib # for <pawn-natives/...> pulled in by the SDK pawn headers
+		lib # for <pawn-natives/...> pulled in by the sdk pawn headers
 		lib/pawn/source # for <amx/amx.h> and <linux/getch.c>
 		lib/pawn/source/linux
 	)

@@ -66,7 +66,7 @@ void Config::load(const std::string& path, ILogger* logger)
 		std::string line;
 		while (std::getline(f, line))
 		{
-			// Strip inline comments and surrounding whitespace.
+			// strip inline comments and surrounding whitespace.
 			size_t hash = line.find('#');
 			if (hash != std::string::npos)
 				line = line.substr(0, hash);
@@ -108,7 +108,7 @@ void Config::applyKnownKeys()
 	modMobile_ = getBool("module.mobile", modMobile_);
 	modRaknet_ = getBool("module.raknet", modRaknet_);
 
-	// Allowed client versions: config override, else the reference whitelist.
+	// allowed client versions: config override, else the reference whitelist.
 	auto it = kv_.find("allowed_versions");
 	if (it != kv_.end() && !it->second.empty())
 		allowedVersions_ = splitCsv(it->second);

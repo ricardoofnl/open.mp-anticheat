@@ -1,0 +1,84 @@
+name: release
+
+# manual trigger only; you type the version to release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "release version, e.g. 1.0.0"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: install 32-bit toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-multilib g++-multilib zip
+
+      - name: build (linux x86)
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DAC_ENABLE_PAWN=ON -DAC_BUILD_32BIT=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+          cmake --build build --config Release -j
+
+      - name: package
+        run: |
+          mkdir -p pkg/components pkg/includes
+          cp build/anticheat.so pkg/components/
+          cp anticheat.cfg pkg/components/
+          cp pawn/anticheat.inc pkg/includes/
+          (cd pkg && zip -r "../anticheat-${{ inputs.version }}-linux.zip" components includes)
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: anticheat-*-linux.zip
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: build (windows x86)
+        run: |
+          cmake -S . -B build -A Win32 -DAC_ENABLE_PAWN=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+          cmake --build build --config Release
+
+      - name: package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path pkg/components, pkg/includes | Out-Null
+          Copy-Item build/Release/anticheat.dll pkg/components/
+          Copy-Item anticheat.cfg pkg/components/
+          Copy-Item pawn/anticheat.inc pkg/includes/
+          Compress-Archive -Path pkg/components, pkg/includes -DestinationPath "anticheat-${{ inputs.version }}-windows.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: anticheat-*-windows.zip
+
+  release:
+    needs: [linux, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+
+      - name: create github release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.version }}
+          name: v${{ inputs.version }}
+          files: dist/**/*.zip

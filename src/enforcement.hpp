@@ -1,6 +1,6 @@
 #pragma once
 
-// Punishment mechanics (messages, delayed kicks, timed bans); policy lives in AntiCheatComponent::report.
+// punishment mechanics (messages, delayed kicks, timed bans); policy lives in anticheatcomponent::report.
 
 #include <sdk.hpp>
 
@@ -17,13 +17,13 @@ public:
 	{
 	}
 
-	// Log + tell the player, but let them keep playing.
+	// log + tell the player, but let them keep playing.
 	void warn(IPlayer& player, const char* cheatName);
 
-	// Message the player then kick after the configured delay.
+	// message the player then kick after the configured delay.
 	void kick(IPlayer& player, const char* cheatName);
 
-	// Message the player, add a timed ban on their address, then kick.
+	// message the player, add a timed ban on their address, then kick.
 	void ban(IPlayer& player, const char* cheatName);
 
 private:

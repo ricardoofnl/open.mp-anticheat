@@ -1,6 +1,6 @@
 #pragma once
 
-// onTick-driven deferred-task scheduler (replaces SetTimerEx); tasks tagged by owner id (player id) for cancel-on-disconnect.
+// ontick-driven deferred-task scheduler (replaces settimerex); tasks tagged by owner id (player id) for cancel-on-disconnect.
 
 #include <chrono>
 #include <functional>
@@ -12,14 +12,14 @@ public:
 	using Clock = std::chrono::steady_clock;
 	using Task = std::function<void()>;
 
-	// Run `task` after `delay`. `ownerId` lets us cancel it if that player
+	// run `task` after `delay`. `ownerid` lets us cancel it if that player
 	// disconnects before it fires.
 	void after(int ownerId, std::chrono::milliseconds delay, Task task);
 
-	// Fire every task whose deadline has passed. Call once per server tick.
+	// fire every task whose deadline has passed. call once per server tick.
 	void process();
 
-	// Drop all pending tasks belonging to `ownerId`.
+	// drop all pending tasks belonging to `ownerid`.
 	void cancelOwner(int ownerId);
 
 	void clear() { entries_.clear(); }

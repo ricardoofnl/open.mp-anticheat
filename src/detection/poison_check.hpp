@@ -1,11 +1,6 @@
 #pragma once
 
-/*
- *  Module 3: anti-tamper "poison" check (actions 0x47 / 0x48). We seed suspicion
- *  and ask the client to read address 0; a clean client answers with address 0
- *  and clears suspicion, while a client that mirrors/echoes the check RPC keeps
- *  it set. Mirrors the reference's 0xCECECE / 0xDEDEDE trick.
- */
+// module 3: anti-tamper poison check (0x47/0x48); a clean client clears suspicion, one that echoes the poisoned rpc keeps it (reference 0xcecece/0xdedede trick).
 
 #include "module.hpp"
 

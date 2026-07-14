@@ -1,19 +1,19 @@
 #pragma once
 
-// Shared types used across the anti-cheat modules.
+// shared types used across the anti-cheat modules.
 
 #include <sdk.hpp>
 
-// What to do when a module reports a detection; mapped per cheat in the config.
+// what to do when a module reports a detection; mapped per cheat in the config.
 enum class CheatAction
 {
-	Ignore = 0, // do nothing (tolerated/benign mods like SilentPatch)
+	Ignore = 0, // do nothing (tolerated/benign mods like silentpatch)
 	Warn = 1, // log + message the player, let them keep playing
 	Kick = 2, // log + message + kick
 	Ban = 3, // log + message + timed ban (config: ban_duration_minutes)
 };
 
-// Stable id per detectable cheat; values match the reference filterscript's cheatValues.
+// stable id per detectable cheat; values match the reference filterscript's cheatvalues.
 enum CheatId
 {
 	Cheat_None = 0,
@@ -41,7 +41,7 @@ enum CheatId
 	Cheat_Max
 };
 
-// One memory signature: read a byte at `address` (obfuscated) and compare to `expected`; mismatch flags `cheat`.
+// one memory signature: read a byte at `address` (obfuscated) and compare to `expected`; mismatch flags `cheat`.
 struct MemorySignature
 {
 	int address;

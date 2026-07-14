@@ -18,8 +18,7 @@ bool RaknetCheck::onReceive(IPlayer& peer, NetworkBitStream& bs)
 	if (!data)
 		return true;
 
-	// Peek actionid / memaddr / retndata, then restore the read pointer for the
-	// server's own handler. Never block.
+	// peek actionid / memaddr / retndata, then restore the read pointer for the server's own handler. never block.
 	const int startOffset = bs.GetReadOffset();
 
 	uint8_t actionid = 0;
@@ -29,8 +28,7 @@ bool RaknetCheck::onReceive(IPlayer& peer, NetworkBitStream& bs)
 
 	bs.SetReadOffset(startOffset);
 
-	// The clean samp.dll check value is 192; a raw response that differs means
-	// the high-level path was tampered with (S0beit).
+	// the clean samp.dll check value is 192; a raw response that differs means the high-level path was tampered with (s0beit).
 	if (ok && actionid == 0x45 && data->sampCheckAddr != 0 && memaddr == data->sampCheckAddr && (retndata & 0xFF) != 192)
 		data->pending[Cheat_S0beit_RakNet] = true;
 

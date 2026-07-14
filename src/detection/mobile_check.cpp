@@ -29,8 +29,7 @@ bool MobileCheck::enabled(const Config& cfg) const
 
 bool MobileCheck::onReceive(IPlayer& peer, NetworkBitStream& bs)
 {
-	// Peek the join structure for the trailing uint16 checksum, then restore the
-	// read pointer so the server processes the join normally. Never block.
+	// peek the trailing uint16 checksum, then restore the read pointer so the server processes the join normally. never block
 	const int startOffset = bs.GetReadOffset();
 
 	uint32_t version = 0, challenge = 0;

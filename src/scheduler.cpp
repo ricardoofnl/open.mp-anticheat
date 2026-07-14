@@ -14,7 +14,7 @@ void Scheduler::process()
 
 	const Clock::time_point now = Clock::now();
 
-	// Move due tasks out first so a task that schedules more work (or cancels an owner) can't invalidate the container.
+	// move due tasks out first so a task that schedules more work (or cancels an owner) can't invalidate the container.
 	std::vector<Task> due;
 	for (size_t i = 0; i < entries_.size();)
 	{

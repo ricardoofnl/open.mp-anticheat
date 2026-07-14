@@ -1,6 +1,6 @@
 #pragma once
 
-// Per-player anti-cheat state, attached to each IPlayer as an extension (queryExtension<PlayerACData>).
+// per-player anti-cheat state, attached to each iplayer as an extension (queryextension<playeracdata>).
 
 #include <array>
 #include <cstdint>
@@ -13,7 +13,7 @@
 class PlayerACData final : public IExtension
 {
 public:
-	// Unique per-extension id used by queryExtension.
+	// unique per-extension id used by queryextension.
 	PROVIDE_EXT_UID(0xAC12CEA7DA7A0001);
 
 	PlayerACData() { resetState(); }
@@ -21,20 +21,19 @@ public:
 	void reset() override { resetState(); }
 	void freeExtension() override { delete this; }
 
-	// ---- shared flags ----
+	// shared flags
 	bool mobilePlayer = false; // verified legit mobile client
 	bool responded = false; // answered at least one 0x5 check
 	bool suspicious = false; // poison module tripped
 	bool spawnChecked = false; // spawn wave already scheduled
 	bool evaluated = false; // evaluate wave already run
-	uint16_t joinChecksum = 0; // trailing checksum from the join RPC (mobile)
+	uint16_t joinChecksum = 0; // trailing checksum from the join rpc (mobile)
 
-	// ---- memory module (0x5) ----
-	// Base address sent for each signature (offset randomised per check). The
-	// matching cheat, once found, is recorded in `pending` below.
+	// memory module (0x5)
+	// base address sent for each signature (offset randomised per check); a match is recorded in `pending` below.
 	std::array<int, signatures::kMemorySignatureCount> memBase {};
 
-	// ---- version module (0x45) ----
+	// version module (0x45)
 	int sampCheckAddr = 0;
 	std::array<int, 4> clientAddrSent {};
 	std::array<int, 4> lastClientRetn {};
@@ -42,11 +41,10 @@ public:
 	int addCheckSpawnAddr = 0;
 	bool clientAnomaly = false;
 
-	// ---- reporting bookkeeping ----
-	// Modules record hits here during the checks; the component reports every
-	// pending cheat once, at the evaluate deadline.
+	// reporting bookkeeping
+	// modules record hits here; the component reports every pending cheat once, at the evaluate deadline.
 	std::array<bool, Cheat_Max> pending {}; // detected, awaiting report
-	std::array<bool, Cheat_Max> exception {}; // suppressed via AC_AddException
+	std::array<bool, Cheat_Max> exception {}; // suppressed via ac_addexception
 	std::array<bool, Cheat_Max> reported {}; // already acted on (dedup)
 	CheatId lastCheat = Cheat_None;
 

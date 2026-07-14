@@ -1,0 +1,20 @@
+{
+	"user": "ricardoofnl",
+	"repo": "open.mp-anticheat",
+	"resources": [
+		{
+			"name": "^anticheat-.*-linux\\.zip$",
+			"platform": "linux",
+			"archive": true,
+			"includes": ["includes"],
+			"plugins": ["components/anticheat.so"]
+		},
+		{
+			"name": "^anticheat-.*-windows\\.zip$",
+			"platform": "windows",
+			"archive": true,
+			"includes": ["includes"],
+			"plugins": ["components/anticheat.dll"]
+		}
+	]
+}
