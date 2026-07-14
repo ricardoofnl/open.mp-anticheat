@@ -1,0 +1,12 @@
+[submodule "lib/sdk"]
+	path = lib/sdk
+	url = https://github.com/openmultiplayer/open.mp-sdk
+[submodule "lib/network"]
+	path = lib/network
+	url = https://github.com/openmultiplayer/open.mp-network
+[submodule "lib/pawn"]
+	path = lib/pawn
+	url = https://github.com/openmultiplayer/compiler
+[submodule "lib/pawn-natives"]
+	path = lib/pawn-natives
+	url = https://github.com/openmultiplayer/pawn-natives

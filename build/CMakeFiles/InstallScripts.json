@@ -1,0 +1,14 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/ricardofnl/projects/openmp-ac/build/cmake_install.cmake",
+		"/home/ricardofnl/projects/openmp-ac/build/lib/sdk/cmake_install.cmake",
+		"/home/ricardofnl/projects/openmp-ac/build/lib/sdk/lib/glm/cmake_install.cmake",
+		"/home/ricardofnl/projects/openmp-ac/build/lib/sdk/lib/glm/glm/cmake_install.cmake",
+		"/home/ricardofnl/projects/openmp-ac/build/lib/sdk/lib/robin-hood-hashing/cmake_install.cmake",
+		"/home/ricardofnl/projects/openmp-ac/build/lib/sdk/lib/span-lite/cmake_install.cmake",
+		"/home/ricardofnl/projects/openmp-ac/build/lib/sdk/lib/string-view-lite/cmake_install.cmake",
+		"/home/ricardofnl/projects/openmp-ac/build/lib/network/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
