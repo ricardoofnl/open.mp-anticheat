@@ -6,6 +6,7 @@
 #include <string>
 #include <utility>
 
+#include "detection/faker5_check.hpp"
 #include "detection/memory_check.hpp"
 #include "detection/mobile_check.hpp"
 #include "detection/poison_check.hpp"
@@ -33,7 +34,7 @@ void AntiCheatComponent::onLoad(ICore* c)
 {
 	core_ = c;
 
-	config_.load("components/anticheat.cfg", core_);
+	config_.load("components/anticheat.cfg");
 
 	// per-session random offset range for the memory checks (reference goffset): two bytes >= 32 apart, aligned to 4.
 	{
@@ -61,9 +62,9 @@ void AntiCheatComponent::onLoad(ICore* c)
 	players.getPlayerCheckDispatcher().addEventHandler(this);
 	core_->getEventDispatcher().addEventHandler(this); // ontick
 
-	log("Anti-Cheat v1.0.0 loaded. modules: memory=%d version=%d poison=%d mobile=%d raknet=%d | log_only=%d",
+	log("Anti-Cheat v1.0.0 loaded. modules: memory=%d version=%d poison=%d mobile=%d raknet=%d faker5=%d | log_only=%d",
 		config_.moduleMemory(), config_.moduleVersion(), config_.modulePoison(),
-		config_.moduleMobile(), config_.moduleRaknet(), config_.logOnly());
+		config_.moduleMobile(), config_.moduleRaknet(), config_.moduleFaker5(), config_.logOnly());
 }
 
 void AntiCheatComponent::buildModules()
@@ -78,6 +79,7 @@ void AntiCheatComponent::buildModules()
 	modules_.push_back(std::unique_ptr<IDetectionModule>(new MemoryCheck(*this)));
 	modules_.push_back(std::unique_ptr<IDetectionModule>(new VersionCheck(*this)));
 	modules_.push_back(std::unique_ptr<IDetectionModule>(new PoisonCheck(*this)));
+	modules_.push_back(std::unique_ptr<IDetectionModule>(new FakeR5Check(*this)));
 
 	RaknetCheck* raknet = new RaknetCheck(*this);
 	raknetModule_ = raknet;
@@ -261,7 +263,8 @@ void AntiCheatComponent::onTick(Microseconds elapsed, TimePoint now)
 void AntiCheatComponent::evaluatePlayer(IPlayer& player, PlayerACData& data)
 {
 	const StringView version = player.getClientVersionName();
-	const bool allowed = data.mobilePlayer || config_.isAllowedVersion(version);
+	const std::string versionStr(version.data(), version.size());
+	const bool allowed = data.mobilePlayer || config_.isAllowedVersion(versionStr.c_str());
 	if (!allowed)
 	{
 		rejectVersion(player, version);

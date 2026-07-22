@@ -27,6 +27,7 @@
 #define AC_CHEAT_S0BEIT_RAKNET       (18)
 #define AC_CHEAT_FAKEMOBILE          (19)
 #define AC_CHEAT_MODDED_CLIENT       (20)
+#define AC_CHEAT_FAKER5              (21)
 
 // actions (as configured per cheat)
 #define AC_ACTION_IGNORE             (0)

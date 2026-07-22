@@ -58,7 +58,7 @@ CheatAction parseAction(const std::string& v, CheatAction def)
 
 } // namespace
 
-void Config::load(const std::string& path, ILogger* logger)
+void Config::load(const std::string& path)
 {
 	std::ifstream f(path);
 	if (f)
@@ -81,12 +81,6 @@ void Config::load(const std::string& path, ILogger* logger)
 			if (!key.empty())
 				kv_[key] = val;
 		}
-		if (logger)
-			logger->printLn("[AC] loaded config from %s (%zu keys)", path.c_str(), kv_.size());
-	}
-	else if (logger)
-	{
-		logger->printLn("[AC] no config at %s, using defaults", path.c_str());
 	}
 
 	applyKnownKeys();
@@ -107,6 +101,7 @@ void Config::applyKnownKeys()
 	modPoison_ = getBool("module.poison", modPoison_);
 	modMobile_ = getBool("module.mobile", modMobile_);
 	modRaknet_ = getBool("module.raknet", modRaknet_);
+	modFaker5_ = getBool("module.faker5", modFaker5_);
 
 	// allowed client versions: config override, else the reference whitelist.
 	auto it = kv_.find("allowed_versions");
@@ -168,11 +163,11 @@ CheatAction Config::actionFor(CheatId id) const
 	return info.defaultAction;
 }
 
-bool Config::isAllowedVersion(StringView version) const
+bool Config::isAllowedVersion(const char* version) const
 {
 	for (const std::string& v : allowedVersions_)
 	{
-		if (version == StringView(v.c_str()))
+		if (v == version)
 			return true;
 	}
 	return false;

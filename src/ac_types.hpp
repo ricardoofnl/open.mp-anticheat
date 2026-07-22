@@ -1,8 +1,6 @@
 #pragma once
 
-// shared types used across the anti-cheat modules.
-
-#include <sdk.hpp>
+// shared types used across the anti-cheat modules. sdk-free so the legacy plugin can share it.
 
 // what to do when a module reports a detection; mapped per cheat in the config.
 enum class CheatAction
@@ -37,6 +35,7 @@ enum CheatId
 	Cheat_S0beit_RakNet = 18,
 	Cheat_FakeMobile = 19, // mobile module (not in the reference's numeric table)
 	Cheat_ModdedClient = 20, // generic modified-client flag (samp.dll mismatch)
+	Cheat_FakeR5 = 21, // faker5-style clientcheck spoofer (answers memory reads from a clean disk image)
 
 	Cheat_Max
 };

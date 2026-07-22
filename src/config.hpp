@@ -7,15 +7,13 @@
 #include <unordered_map>
 #include <vector>
 
-#include <sdk.hpp>
-
 #include "ac_types.hpp"
 
 class Config
 {
 public:
-	// parse `path` if it exists; otherwise keep defaults. `logger` may be null.
-	void load(const std::string& path, ILogger* logger);
+	// parse `path` if it exists; otherwise keep defaults.
+	void load(const std::string& path);
 
 	bool enabled() const { return enabled_; }
 	bool logOnly() const { return logOnly_; } // detect + log but never punish
@@ -31,12 +29,13 @@ public:
 	bool modulePoison() const { return modPoison_; }
 	bool moduleMobile() const { return modMobile_; } // raw raknet, off by default
 	bool moduleRaknet() const { return modRaknet_; } // raw raknet, off by default
+	bool moduleFaker5() const { return modFaker5_; } // faker5 / clientcheck-spoofer detector
 
 	// resolve the configured action for a cheat (per-cheat override, else the
 	// signature's built-in default).
 	CheatAction actionFor(CheatId id) const;
 
-	bool isAllowedVersion(StringView version) const;
+	bool isAllowedVersion(const char* version) const;
 	const std::vector<std::string>& allowedVersions() const { return allowedVersions_; }
 	const std::string& mobileGpci() const { return mobileGpci_; }
 	uint16_t mobileChecksum() const { return mobileChecksum_; }
@@ -61,6 +60,7 @@ private:
 	bool modPoison_ = true;
 	bool modMobile_ = false;
 	bool modRaknet_ = false;
+	bool modFaker5_ = true;
 	std::vector<std::string> allowedVersions_;
 	std::string mobileGpci_;
 	uint16_t mobileChecksum_ = 0xBEEF;

@@ -10,3 +10,6 @@
 [submodule "lib/pawn-natives"]
 	path = lib/pawn-natives
 	url = https://github.com/openmultiplayer/pawn-natives
+[submodule "lib/samp-plugin-sdk"]
+	path = lib/samp-plugin-sdk
+	url = https://github.com/AmyrAhmady/samp-plugin-sdk

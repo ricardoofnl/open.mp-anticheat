@@ -1,8 +1,17 @@
 #include "version_check.hpp"
 
+#include <string>
+
 #include "../config.hpp"
 #include "../player_data.hpp"
 #include "signatures.hpp"
+
+// signatures::versionIndex wants a null-terminated string; the SDK StringView isn't guaranteed to be.
+static std::string verName(IPlayer& player)
+{
+	StringView v = player.getClientVersionName();
+	return std::string(v.data(), v.size());
+}
 
 bool VersionCheck::enabled(const Config& cfg) const
 {
@@ -19,7 +28,7 @@ void VersionCheck::onConnect(IPlayer& player, PlayerACData& data)
 		player.sendClientCheck(0x45, signatures::kClientAddr[i], 0x0, 0x4);
 	}
 
-	const int idx = signatures::versionIndex(player.getClientVersionName());
+	const int idx = signatures::versionIndex(verName(player).c_str());
 	if (idx < 0)
 		return;
 
@@ -39,7 +48,7 @@ void VersionCheck::onConnect(IPlayer& player, PlayerACData& data)
 
 void VersionCheck::onSpawn(IPlayer& player, PlayerACData& data)
 {
-	const int idx = signatures::versionIndex(player.getClientVersionName());
+	const int idx = signatures::versionIndex(verName(player).c_str());
 	if (idx < 0 || player.isUsingOmp())
 		return;
 

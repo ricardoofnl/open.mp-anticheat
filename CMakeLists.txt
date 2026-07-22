@@ -38,6 +38,7 @@ set(AC_SOURCES
 	src/detection/poison_check.cpp
 	src/detection/mobile_check.cpp
 	src/detection/raknet_check.cpp
+	src/detection/faker5_check.cpp
 )
 
 if(AC_ENABLE_PAWN)

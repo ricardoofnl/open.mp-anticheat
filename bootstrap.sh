@@ -25,6 +25,8 @@ clone https://github.com/openmultiplayer/open.mp-sdk      lib/sdk
 clone https://github.com/openmultiplayer/open.mp-network  lib/network
 clone https://github.com/openmultiplayer/compiler         lib/pawn
 clone https://github.com/openmultiplayer/pawn-natives      lib/pawn-natives
+# legacy sa-mp plugin sdk (for the plugins/ build)
+clone https://github.com/AmyrAhmady/samp-plugin-sdk        lib/samp-plugin-sdk
 
 echo
 echo "Done. Configure & build with:"

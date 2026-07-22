@@ -41,6 +41,17 @@ public:
 	int addCheckSpawnAddr = 0;
 	bool clientAnomaly = false;
 
+	// faker5 module (0x45 samp / 0x5 gta pe-header reads)
+	// header probe addresses sent; a spoofer answers them 0 (file-offset resolves to 0).
+	std::array<int, signatures::kHeaderProbeCount> faker5SampHeader {};
+	std::array<int, signatures::kHeaderProbeCount> faker5GtaHeader {};
+	int faker5SampCanaryAddr = 0;
+	int faker5GtaCanaryAddr = 0;
+	int faker5SampZero = 0, faker5SampNonZero = 0;
+	int faker5GtaZero = 0, faker5GtaNonZero = 0;
+	bool faker5SampCanaryLive = false; // an in-section samp read returned real data
+	bool faker5GtaCanaryLive = false; // an in-section gta read returned real data
+
 	// reporting bookkeeping
 	// modules record hits here; the component reports every pending cheat once, at the evaluate deadline.
 	std::array<bool, Cheat_Max> pending {}; // detected, awaiting report
@@ -56,7 +67,12 @@ private:
 		joinChecksum = 0;
 		sampCheckAddr = addCheckConnectAddr = addCheckSpawnAddr = 0;
 		lastCheat = Cheat_None;
+		faker5SampCanaryAddr = faker5GtaCanaryAddr = 0;
+		faker5SampZero = faker5SampNonZero = faker5GtaZero = faker5GtaNonZero = 0;
+		faker5SampCanaryLive = faker5GtaCanaryLive = false;
 		memBase.fill(0);
+		faker5SampHeader.fill(0);
+		faker5GtaHeader.fill(0);
 		clientAddrSent.fill(0);
 		lastClientRetn.fill(0);
 		pending.fill(false);

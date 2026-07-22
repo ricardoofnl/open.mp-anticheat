@@ -42,6 +42,18 @@ static const int kClientAddr[4] = { 0x3A9EB, 0x3AEB9, 0x3AD8D, 0x3A7F2 };
 // samp.dll base checks. index: 0=0.3.dl-r1, 1=0.3.7-r5, 2=0.3.7-r4, 3=0.3.7-r3.
 static const int kSampAddr[4] = { 0x41B04, 0x42044, 0x41FF4, 0x41904 };
 
+// faker5 counter: pe-header reads. a real client answers these from the live
+// module image (dos-stub bytes, non-zero); faker5 maps the module from disk and
+// resolves a header rva to file-offset 0, then answers 0 - that is the tell.
+static const int kSampHeaderProbe[] = { 0x40, 0x54, 0x68 }; // samp.dll dos-stub rvas (0x45)
+static const int kGtaHeaderProbe[] = { 0x400040, 0x400054, 0x400068 }; // gta_sa.exe dos-stub addrs (0x5)
+static constexpr int kHeaderProbeCount = int(sizeof(kSampHeaderProbe) / sizeof(kSampHeaderProbe[0]));
+
+// in-section canaries: real data for both a genuine client and faker5; used only
+// to confirm the client actually answers checks (guards against clients that reply 0 to everything).
+static const int kSampCanaryAddr = 0x1000; // samp.dll .text start (0x45)
+static const int kGtaCanaryAddr = 0x401000; // gta_sa.exe .text (0x5)
+
 // extra per-version samp.dll checks (0x45); each address is two addends (obfuscation) summed then offset-subtracted at send time. same order as ksampaddr.
 static const int kAddCheckConnect[4][2] = {
 	{ 0x6B4D, 0x33D53 }, // 0.3.dl-r1
@@ -66,25 +78,43 @@ static constexpr int kAllowedClientCount = int(sizeof(kAllowedClients) / sizeof(
 static const char kMobileGpci[] = "ED40ED0E8089CC44C08EE9580F4C8C44EE8EE990";
 static const uint16_t kMobileChecksum = 0xBEEF;
 
-// map a client version name to an index into ksampaddr / kaddcheck*, or -1.
-inline int versionIndex(StringView v)
+// case-insensitive C-string compare (self-contained; keeps this header sdk-free).
+inline bool ieq(const char* a, const char* b)
 {
-	if (v == "0.3.DL-R1")
+	while (*a && *b)
+	{
+		char ca = *a, cb = *b;
+		if (ca >= 'a' && ca <= 'z')
+			ca -= 32;
+		if (cb >= 'a' && cb <= 'z')
+			cb -= 32;
+		if (ca != cb)
+			return false;
+		++a;
+		++b;
+	}
+	return *a == *b;
+}
+
+// map a client version name to an index into ksampaddr / kaddcheck*, or -1.
+inline int versionIndex(const char* v)
+{
+	if (ieq(v, "0.3.DL-R1"))
 		return 0;
-	if (v == "0.3.7-R5")
+	if (ieq(v, "0.3.7-R5"))
 		return 1;
-	if (v == "0.3.7-R4")
+	if (ieq(v, "0.3.7-R4"))
 		return 2;
-	if (v == "0.3.7-R3")
+	if (ieq(v, "0.3.7-R3"))
 		return 3;
 	return -1;
 }
 
-inline bool isAllowedClient(StringView v)
+inline bool isAllowedClient(const char* v)
 {
 	for (int i = 0; i < kAllowedClientCount; ++i)
 	{
-		if (v == kAllowedClients[i])
+		if (ieq(v, kAllowedClients[i]))
 			return true;
 	}
 	return false;
@@ -120,6 +150,7 @@ static const CheatInfo kCheatInfo[] = {
 	{ Cheat_S0beit_RakNet, "S0beit / RakNet anomaly", "s0beit_raknet", CheatAction::Kick },
 	{ Cheat_FakeMobile, "FakeMobile", "fakemobile", CheatAction::Ban },
 	{ Cheat_ModdedClient, "Modded client", "modded_client", CheatAction::Kick },
+	{ Cheat_FakeR5, "FakeR5 / ClientCheck spoofer", "faker5", CheatAction::Kick },
 };
 static constexpr int kCheatInfoCount = int(sizeof(kCheatInfo) / sizeof(kCheatInfo[0]));
 
