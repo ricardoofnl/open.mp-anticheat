@@ -54,6 +54,17 @@ static constexpr int kHeaderProbeCount = int(sizeof(kSampHeaderProbe) / sizeof(k
 static const int kSampCanaryAddr = 0x1000; // samp.dll .text start (0x45)
 static const int kGtaCanaryAddr = 0x401000; // gta_sa.exe .text (0x5)
 
+// scc counter: static-clientcheck-response spoofers (scc_ac_bypass) recognise a
+// signature only inside a [base-0x10, base) window and replay one baked constant,
+// blind to the read's offset/count. bait a few known bases inside that window, then
+// read the same wire address with different offset/count: a genuine client's checksum
+// moves with the read, the spoofer's answer never does. bases must be ones the spoofer
+// knows, i.e. the standard cheat-signature addresses.
+static const int kSccBases[] = { 0x5E8606, 0x4667DB, 0x6FC5B0, 0x5E85F9 };
+static constexpr int kSccBaseCount = int(sizeof(kSccBases) / sizeof(kSccBases[0]));
+static constexpr int kSccWindowOffset = 0x08; // wire = base - 0x08, inside the spoofer's [base-0x10, base) window
+static const int kSccCanaryAddr = 0x401000; // gta_sa.exe .text; the spoofer ignores it, so a real (non-zero) answer proves live reads
+
 // extra per-version samp.dll checks (0x45); each address is two addends (obfuscation) summed then offset-subtracted at send time. same order as ksampaddr.
 static const int kAddCheckConnect[4][2] = {
 	{ 0x6B4D, 0x33D53 }, // 0.3.dl-r1
@@ -151,6 +162,7 @@ static const CheatInfo kCheatInfo[] = {
 	{ Cheat_FakeMobile, "FakeMobile", "fakemobile", CheatAction::Ban },
 	{ Cheat_ModdedClient, "Modded client", "modded_client", CheatAction::Kick },
 	{ Cheat_FakeR5, "FakeR5 / ClientCheck spoofer", "faker5", CheatAction::Kick },
+	{ Cheat_SccBypass, "SCC ClientCheck spoofer", "scc", CheatAction::Kick },
 };
 static constexpr int kCheatInfoCount = int(sizeof(kCheatInfo) / sizeof(kCheatInfo[0]));
 

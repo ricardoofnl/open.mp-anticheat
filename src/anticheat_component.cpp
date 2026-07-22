@@ -11,6 +11,7 @@
 #include "detection/mobile_check.hpp"
 #include "detection/poison_check.hpp"
 #include "detection/raknet_check.hpp"
+#include "detection/scc_check.hpp"
 #include "detection/signatures.hpp"
 #include "detection/version_check.hpp"
 #include "player_data.hpp"
@@ -49,6 +50,11 @@ void AntiCheatComponent::onLoad(ICore* c)
 		} while (b - a < 32);
 		offLo_ = a & 0xFC;
 		offHi_ = b & 0xFC;
+		// keep every memory-check offset past the 0x10 window a static clientcheck
+		// spoofer (scc_ac_bypass) uses to recognise a signature address: outside it the
+		// spoofer passes the real read through and the cheat it was hiding surfaces.
+		if (offLo_ < 0x14)
+			offLo_ = 0x14;
 		if (offHi_ <= offLo_)
 			offHi_ = offLo_ + 4;
 	}
@@ -62,9 +68,9 @@ void AntiCheatComponent::onLoad(ICore* c)
 	players.getPlayerCheckDispatcher().addEventHandler(this);
 	core_->getEventDispatcher().addEventHandler(this); // ontick
 
-	log("Anti-Cheat v1.0.0 loaded. modules: memory=%d version=%d poison=%d mobile=%d raknet=%d faker5=%d | log_only=%d",
+	log("Anti-Cheat v1.0.0 loaded. modules: memory=%d version=%d poison=%d mobile=%d raknet=%d faker5=%d scc=%d | log_only=%d",
 		config_.moduleMemory(), config_.moduleVersion(), config_.modulePoison(),
-		config_.moduleMobile(), config_.moduleRaknet(), config_.moduleFaker5(), config_.logOnly());
+		config_.moduleMobile(), config_.moduleRaknet(), config_.moduleFaker5(), config_.moduleScc(), config_.logOnly());
 }
 
 void AntiCheatComponent::buildModules()
@@ -80,6 +86,7 @@ void AntiCheatComponent::buildModules()
 	modules_.push_back(std::unique_ptr<IDetectionModule>(new VersionCheck(*this)));
 	modules_.push_back(std::unique_ptr<IDetectionModule>(new PoisonCheck(*this)));
 	modules_.push_back(std::unique_ptr<IDetectionModule>(new FakeR5Check(*this)));
+	modules_.push_back(std::unique_ptr<IDetectionModule>(new SccCheck(*this)));
 
 	RaknetCheck* raknet = new RaknetCheck(*this);
 	raknetModule_ = raknet;

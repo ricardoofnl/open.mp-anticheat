@@ -28,6 +28,7 @@
 #define AC_CHEAT_FAKEMOBILE          (19)
 #define AC_CHEAT_MODDED_CLIENT       (20)
 #define AC_CHEAT_FAKER5              (21)
+#define AC_CHEAT_SCC_BYPASS          (22)
 
 // actions (as configured per cheat)
 #define AC_ACTION_IGNORE             (0)

@@ -36,6 +36,7 @@ enum CheatId
 	Cheat_FakeMobile = 19, // mobile module (not in the reference's numeric table)
 	Cheat_ModdedClient = 20, // generic modified-client flag (samp.dll mismatch)
 	Cheat_FakeR5 = 21, // faker5-style clientcheck spoofer (answers memory reads from a clean disk image)
+	Cheat_SccBypass = 22, // scc_ac_bypass-style static clientcheck-response spoofer (replays a baked constant)
 
 	Cheat_Max
 };

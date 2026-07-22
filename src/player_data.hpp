@@ -52,6 +52,16 @@ public:
 	bool faker5SampCanaryLive = false; // an in-section samp read returned real data
 	bool faker5GtaCanaryLive = false; // an in-section gta read returned real data
 
+	// scc module (static clientcheck-response spoofer)
+	// per bait base: wire address probed, first answer seen (-1 = none), answer count,
+	// and whether any answer differed. a spoofer replays one constant, so varied stays false.
+	std::array<int, signatures::kSccBaseCount> sccProbeAddr {};
+	std::array<int, signatures::kSccBaseCount> sccFirst {};
+	std::array<int, signatures::kSccBaseCount> sccCount {};
+	std::array<bool, signatures::kSccBaseCount> sccVaried {};
+	int sccCanaryAddr = 0;
+	bool sccCanaryLive = false; // a live gta read returned real data (the spoofer leaves it alone)
+
 	// reporting bookkeeping
 	// modules record hits here; the component reports every pending cheat once, at the evaluate deadline.
 	std::array<bool, Cheat_Max> pending {}; // detected, awaiting report
@@ -70,9 +80,15 @@ private:
 		faker5SampCanaryAddr = faker5GtaCanaryAddr = 0;
 		faker5SampZero = faker5SampNonZero = faker5GtaZero = faker5GtaNonZero = 0;
 		faker5SampCanaryLive = faker5GtaCanaryLive = false;
+		sccCanaryAddr = 0;
+		sccCanaryLive = false;
 		memBase.fill(0);
 		faker5SampHeader.fill(0);
 		faker5GtaHeader.fill(0);
+		sccProbeAddr.fill(0);
+		sccFirst.fill(-1);
+		sccCount.fill(0);
+		sccVaried.fill(false);
 		clientAddrSent.fill(0);
 		lastClientRetn.fill(0);
 		pending.fill(false);

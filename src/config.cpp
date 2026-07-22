@@ -102,6 +102,7 @@ void Config::applyKnownKeys()
 	modMobile_ = getBool("module.mobile", modMobile_);
 	modRaknet_ = getBool("module.raknet", modRaknet_);
 	modFaker5_ = getBool("module.faker5", modFaker5_);
+	modScc_ = getBool("module.scc", modScc_);
 
 	// allowed client versions: config override, else the reference whitelist.
 	auto it = kv_.find("allowed_versions");

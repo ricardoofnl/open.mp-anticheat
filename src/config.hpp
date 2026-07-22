@@ -30,6 +30,7 @@ public:
 	bool moduleMobile() const { return modMobile_; } // raw raknet, off by default
 	bool moduleRaknet() const { return modRaknet_; } // raw raknet, off by default
 	bool moduleFaker5() const { return modFaker5_; } // faker5 / clientcheck-spoofer detector
+	bool moduleScc() const { return modScc_; } // scc_ac_bypass / static clientcheck-spoofer detector
 
 	// resolve the configured action for a cheat (per-cheat override, else the
 	// signature's built-in default).
@@ -61,6 +62,7 @@ private:
 	bool modMobile_ = false;
 	bool modRaknet_ = false;
 	bool modFaker5_ = true;
+	bool modScc_ = true;
 	std::vector<std::string> allowedVersions_;
 	std::string mobileGpci_;
 	uint16_t mobileChecksum_ = 0xBEEF;
